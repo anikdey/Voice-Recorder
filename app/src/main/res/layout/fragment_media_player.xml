@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/file_name_container_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/file_name_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+            android:text="File name"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/increate_speed_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.x"
+            android:textAlignment="textEnd"
+            android:textColor="@android:color/white"
+            android:textSize="16dp" />
+
+    </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/seek_bar"
+        android:layout_below="@+id/file_name_container_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/current_position_text_view"
+        android:layout_below="@+id/seek_bar"
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:textColor="@android:color/white"
+        android:text="5:30"/>
+
+    <TextView
+        android:id="@+id/total_duration_text_view"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seek_bar"
+        android:textColor="@android:color/white"
+        android:textSize="16dp"
+        android:text="5:30" />
+
+    <LinearLayout
+        android:id="@+id/player_control_linear_layout"
+        android:layout_below="@+id/current_position_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/play_audio_image_view"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@drawable/play"/>
+        <ImageView
+            android:id="@+id/pause_playing_audio_image_view"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@drawable/pause_white"/>
+        <ImageView
+            android:id="@+id/cancel_dialog_image_view"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@drawable/close_dialog"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -26,10 +26,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-/**
- * Created by anik.dey on 1/24/2018.
- */
-
 public class SavedRecordingListFragment extends BaseSupportFragment implements MediaPlayer.OnPreparedListener {
     public static final String TAG = SavedRecordingListFragment.class.getSimpleName();
 
@@ -60,7 +56,10 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                Toast.makeText(getContext(), itemsNames.get(position), Toast.LENGTH_SHORT).show();
+                String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)+"/music_file.mp3";
+                MediaPlayerDialogFragment fragment = MediaPlayerDialogFragment.getInstance(path);
+                fragment.setCancelable(false);
+                fragment.show(getFragmentManager(), MediaPlayerDialogFragment.TAG);
             }
         });
 
@@ -102,23 +101,6 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.start();
         Toast.makeText(getContext(), "Start called", Toast.LENGTH_SHORT).show();
-    }
-
-    @OnClick(R.id.play_audio_button)
-    protected void playAudioFromSDCard() {
-        killMediaPlayer();
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)+"/music_file.mp3";
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(path);
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-            Toast.makeText(getContext(), "Start called", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     private void playAudio(String url) throws Exception {
