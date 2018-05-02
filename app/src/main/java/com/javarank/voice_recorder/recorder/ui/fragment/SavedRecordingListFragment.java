@@ -29,13 +29,10 @@ import butterknife.OnClick;
 public class SavedRecordingListFragment extends BaseSupportFragment implements MediaPlayer.OnPreparedListener {
     public static final String TAG = SavedRecordingListFragment.class.getSimpleName();
 
-    private static final String AUDIO_PATH = "http://www.androidbook.com/akc/filestorage/android/documentfiles/3389/play.mp3";
-
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
     private SavedRecordingAdapter adapter;
-
     private MediaPlayer mediaPlayer;
     private int playbackPosition = 0;
     private List<String> itemsNames;
@@ -52,7 +49,6 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
 
     @Override
     public void init() {
-
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
@@ -69,8 +65,6 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
 
     private  void initRecyclerView(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -86,42 +80,9 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
         adapter.notifyDataSetChanged();
     }
 
-    protected void playAudioOnClick() {
-        try {
-            playAudio(AUDIO_PATH);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @OnClick(R.id.play_audio_button)
-    protected void playLocalAudio() {
-        killMediaPlayer();
-        mediaPlayer = MediaPlayer.create(getContext(), R.raw.music_file);
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.start();
-        Toast.makeText(getContext(), "Start called", Toast.LENGTH_SHORT).show();
-    }
-
-    private void playAudio(String url) throws Exception {
-        killMediaPlayer();
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setDataSource(url);
-        mediaPlayer.setOnPreparedListener(this);
-        mediaPlayer.prepareAsync();
-    }
-
-    private void killMediaPlayer() {
-        if(mediaPlayer != null) {
-            mediaPlayer.release();
-        }
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        killMediaPlayer();
     }
 
     @Override

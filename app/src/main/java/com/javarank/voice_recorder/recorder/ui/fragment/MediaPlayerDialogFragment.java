@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.javarank.voice_recorder.R;
 
+import java.io.FileDescriptor;
 import java.io.IOException;
 
 import butterknife.BindView;
@@ -84,6 +86,12 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
         try {
             mediaPlayer.setDataSource(filePath);
             mediaPlayer.prepare();
+            Log.d(TAG, ""+mediaPlayer.getDuration());
+
+            int length = mediaPlayer.getDuration();
+            seekBar.setMax(length);
+            totalDurationTextView.setText(""+length);
+
             mediaPlayer.start();
         } catch (IOException e) {
             e.printStackTrace();
