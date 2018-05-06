@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MediaPlayerDialogFragment extends DialogFragment implements MediaPlayer.OnPreparedListener  {
+public class MediaPlayerDialogFragment extends DialogFragment implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener  {
     public static final String TAG = MediaPlayerDialogFragment.class.getSimpleName();
     private static final String ARG_FILE_PATH = "path";
 
@@ -43,6 +44,7 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
     private String filePath;
     private MediaPlayer mediaPlayer;
     private int playbackPosition = 0;
+    private boolean isPlaying = false;
 
     public static MediaPlayerDialogFragment getInstance(String path) {
         MediaPlayerDialogFragment fragment = new MediaPlayerDialogFragment();
@@ -55,7 +57,6 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_DeviceDefault_DialogWhenLarge_NoActionBar);
         if( getArguments() != null ) {
             filePath = getArguments().getString(ARG_FILE_PATH);
         }
@@ -108,6 +109,11 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
         });
     }
 
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        stopPlayingMediaPlayer();
+    }
+
     private void prepareMediaPlayerFromPoint(int progress) {
         killMediaPlayer();
         mediaPlayer = new MediaPlayer();
@@ -122,6 +128,7 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
             seekBar.setProgress(mediaPlayer.getCurrentPosition());
             setDuration(currentPositionTextView, mediaPlayer.getCurrentPosition());
             mediaPlayer.start();
+            isPlaying = true;
             updateSeekBar();
         } catch (IOException e) {
             e.printStackTrace();
@@ -131,16 +138,52 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
     private void setDuration(TextView textView, int length) {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(length);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(length) - TimeUnit.MINUTES.toSeconds(minutes);
-        currentPositionTextView.setText(String.format("%02d:%02d", minutes,seconds));
+        textView.setText(String.format("%02d:%02d", minutes,seconds));
     }
 
-    private void setUpMediaPlayerOnCompleteListener(MediaPlayer mediaPlayer) {
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                stopPlayingMediaPlayer();
-            }
-        });
+
+    @BindView(R.id.play_pause_audio_image_view)
+    ImageView playPauseImageView;
+
+    @OnClick(R.id.play_pause_audio_image_view)
+    protected void controlPlayAndPause() {
+        if( isPlaying ) {
+            pausePlaying();
+            playPauseImageView.setImageResource(R.drawable.play);
+        } else {
+            startPlaying();
+            playPauseImageView.setImageResource(R.drawable.pause_white);
+        }
+    }
+
+    private void startPlaying() {
+        killMediaPlayer();
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mediaPlayer.setDataSource(filePath);
+            mediaPlayer.prepare();
+            int length = mediaPlayer.getDuration();
+            mediaPlayer.seekTo(playbackPosition);
+            mediaPlayer.start();
+            isPlaying = true;
+            seekBar.setMax(length);
+            updateSeekBar();
+            //setDuration(totalDurationTextView, length);
+            //setDuration(currentPositionTextView, 0);
+            //setUpMediaPlayerOnCompleteListener(mediaPlayer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void pausePlaying() {
+        if(mediaPlayer != null && isPlaying == true) {
+            mediaPlayer.pause();
+            playbackPosition = mediaPlayer.getCurrentPosition();
+            isPlaying = false;
+            mHandler.removeCallbacks(mRunnable);
+        }
     }
 
     private void stopPlayingMediaPlayer(){
@@ -154,7 +197,7 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
     }
 
 
-    @OnClick(R.id.play_audio_image_view)
+
     protected void playAudioFromSDCard() {
         killMediaPlayer();
         mediaPlayer = new MediaPlayer();
@@ -163,18 +206,20 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
             mediaPlayer.setDataSource(filePath);
             mediaPlayer.prepare();
             int length = mediaPlayer.getDuration();
-            seekBar.setMax(length);
-            updateSeekBar();
-            setDuration(totalDurationTextView, length);
-            setDuration(currentPositionTextView, 0);
+            mediaPlayer.seekTo(playbackPosition);
             mediaPlayer.start();
-            setUpMediaPlayerOnCompleteListener(mediaPlayer);
+            isPlaying = true;
+            //seekBar.setMax(length);
+            //updateSeekBar();
+            //setDuration(totalDurationTextView, length);
+            //setDuration(currentPositionTextView, 0);
+            //setUpMediaPlayerOnCompleteListener(mediaPlayer);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @OnClick(R.id.pause_playing_audio_image_view)
+    //@OnClick(R.id.pause_playing_audio_image_view)
     protected void stopPlayingAudio() {
         if( mediaPlayer != null && mediaPlayer.isPlaying() ) {
             mediaPlayer.pause();

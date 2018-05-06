@@ -22,14 +22,12 @@
             android:text="File name"
             android:textSize="@dimen/text_size_16" />
 
-        <TextView
-            android:id="@+id/increate_speed_text_view"
+
+        <ImageView
+            android:id="@+id/cancel_dialog_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1.x"
-            android:textAlignment="textEnd"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_16" />
+            android:src="@drawable/close_dialog"/>
 
     </LinearLayout>
 
@@ -66,26 +64,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
         <ImageView
-            android:id="@+id/play_audio_image_view"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:src="@drawable/play"/>
-        <ImageView
-            android:id="@+id/pause_playing_audio_image_view"
+            android:id="@+id/play_pause_audio_image_view"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:src="@drawable/pause_white"/>
-        <ImageView
-            android:id="@+id/cancel_dialog_image_view"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:src="@drawable/close_dialog"/>
-
     </LinearLayout>
 
 </RelativeLayout>
