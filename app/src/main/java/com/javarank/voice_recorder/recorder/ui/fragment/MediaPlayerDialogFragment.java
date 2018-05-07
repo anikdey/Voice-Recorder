@@ -29,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MediaPlayerDialogFragment extends DialogFragment implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener  {
+public class MediaPlayerDialogFragment extends DialogFragment implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
     public static final String TAG = MediaPlayerDialogFragment.class.getSimpleName();
     private static final String ARG_FILE_PATH = "path";
 
@@ -39,6 +39,8 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
     TextView totalDurationTextView;
     @BindView(R.id.seek_bar)
     SeekBar seekBar;
+    @BindView(R.id.play_pause_audio_image_view)
+    ImageView playPauseImageView;
 
     private Handler mHandler = new Handler();
     private String filePath;
@@ -51,13 +53,13 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
         Bundle args = new Bundle();
         args.putString(ARG_FILE_PATH, path);
         fragment.setArguments(args);
-        return  fragment;
+        return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if( getArguments() != null ) {
+        if (getArguments() != null) {
             filePath = getArguments().getString(ARG_FILE_PATH);
         }
     }
@@ -73,7 +75,7 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_media_player, container, false);
-        ButterKnife.bind(this,  view);
+        ButterKnife.bind(this, view);
         init();
         return view;
     }
@@ -86,12 +88,17 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if( mediaPlayer != null && fromUser ) {
+                if (mediaPlayer != null && fromUser) {
                     mediaPlayer.seekTo(progress);
+                    if (isPlaying == false) {
+                        mediaPlayer.start();
+                        setPlayPauseIcon(R.drawable.pause_white);
+                        isPlaying = true;
+                    }
                     mHandler.removeCallbacks(mRunnable);
                     updateSeekBar();
-                    setDuration(currentPositionTextView, mediaPlayer.getCurrentPosition());
-                } else if( mediaPlayer == null && fromUser ) {
+                    setDurationTextOnTestView(currentPositionTextView, mediaPlayer.getCurrentPosition());
+                } else if (mediaPlayer == null && fromUser) {
                     prepareMediaPlayerFromPoint(progress);
                     updateSeekBar();
                 }
@@ -114,45 +121,12 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
         stopPlayingMediaPlayer();
     }
 
-    private void prepareMediaPlayerFromPoint(int progress) {
-        killMediaPlayer();
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(filePath);
-            mediaPlayer.prepare();
-            mediaPlayer.seekTo(progress);
-            int length = mediaPlayer.getDuration();
-            seekBar.setMax(length);
-            setDuration(totalDurationTextView, length);
-            seekBar.setProgress(mediaPlayer.getCurrentPosition());
-            setDuration(currentPositionTextView, mediaPlayer.getCurrentPosition());
-            mediaPlayer.start();
-            isPlaying = true;
-            updateSeekBar();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setDuration(TextView textView, int length) {
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(length);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(length) - TimeUnit.MINUTES.toSeconds(minutes);
-        textView.setText(String.format("%02d:%02d", minutes,seconds));
-    }
-
-
-    @BindView(R.id.play_pause_audio_image_view)
-    ImageView playPauseImageView;
-
     @OnClick(R.id.play_pause_audio_image_view)
     protected void controlPlayAndPause() {
-        if( isPlaying ) {
+        if (isPlaying) {
             pausePlaying();
-            playPauseImageView.setImageResource(R.drawable.play);
         } else {
             startPlaying();
-            playPauseImageView.setImageResource(R.drawable.pause_white);
         }
     }
 
@@ -166,68 +140,73 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
             int length = mediaPlayer.getDuration();
             mediaPlayer.seekTo(playbackPosition);
             mediaPlayer.start();
-            isPlaying = true;
+            setPlayPauseIcon(R.drawable.pause_white);
+            setDurationTextOnTestView(totalDurationTextView, length);
+            setDurationTextOnTestView(currentPositionTextView, mediaPlayer.getCurrentPosition());
             seekBar.setMax(length);
             updateSeekBar();
-            //setDuration(totalDurationTextView, length);
-            //setDuration(currentPositionTextView, 0);
-            //setUpMediaPlayerOnCompleteListener(mediaPlayer);
+            isPlaying = true;
+            mediaPlayer.setOnCompletionListener(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void pausePlaying() {
-        if(mediaPlayer != null && isPlaying == true) {
+        if (mediaPlayer != null && isPlaying == true) {
             mediaPlayer.pause();
             playbackPosition = mediaPlayer.getCurrentPosition();
+            setPlayPauseIcon(R.drawable.play);
             isPlaying = false;
             mHandler.removeCallbacks(mRunnable);
         }
     }
 
-    private void stopPlayingMediaPlayer(){
-        mHandler.removeCallbacks(mRunnable);
-        mediaPlayer.stop();
-        mediaPlayer.release();
-        mediaPlayer = null;
-        seekBar.setProgress(seekBar.getMax());
-        currentPositionTextView.setText(totalDurationTextView.getText());
-        seekBar.setProgress(seekBar.getMax());
-    }
-
-
-
-    protected void playAudioFromSDCard() {
+    private void prepareMediaPlayerFromPoint(int progress) {
         killMediaPlayer();
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mediaPlayer.setDataSource(filePath);
             mediaPlayer.prepare();
+            mediaPlayer.seekTo(progress);
             int length = mediaPlayer.getDuration();
-            mediaPlayer.seekTo(playbackPosition);
+            seekBar.setMax(length);
+            seekBar.setProgress(mediaPlayer.getCurrentPosition());
+            setDurationTextOnTestView(currentPositionTextView, mediaPlayer.getCurrentPosition());
             mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(this);
+            setPlayPauseIcon(R.drawable.pause_white);
             isPlaying = true;
-            //seekBar.setMax(length);
-            //updateSeekBar();
-            //setDuration(totalDurationTextView, length);
-            //setDuration(currentPositionTextView, 0);
-            //setUpMediaPlayerOnCompleteListener(mediaPlayer);
+            updateSeekBar();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    //@OnClick(R.id.pause_playing_audio_image_view)
-    protected void stopPlayingAudio() {
-        if( mediaPlayer != null && mediaPlayer.isPlaying() ) {
-            mediaPlayer.pause();
-        }
+    private void setDurationTextOnTestView(TextView textView, int length) {
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(length);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(length) - TimeUnit.MINUTES.toSeconds(minutes);
+        textView.setText(String.format("%02d:%02d", minutes, seconds));
+    }
+
+    private void setPlayPauseIcon(int resId) {
+        playPauseImageView.setImageResource(resId);
+    }
+
+    private void stopPlayingMediaPlayer() {
+        mHandler.removeCallbacks(mRunnable);
+        mediaPlayer.stop();
+        mediaPlayer.release();
+        mediaPlayer = null;
+        seekBar.setProgress(0);
+        setPlayPauseIcon(R.drawable.play);
+        setDurationTextOnTestView(currentPositionTextView, 0);
+        mHandler.removeCallbacks(mRunnable);
     }
 
     private void killMediaPlayer() {
-        if(mediaPlayer != null) {
+        if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
         }
@@ -253,10 +232,10 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            if(mediaPlayer != null){
+            if (mediaPlayer != null) {
                 int mCurrentPosition = mediaPlayer.getCurrentPosition();
                 seekBar.setProgress(mCurrentPosition);
-                setDuration(currentPositionTextView, mCurrentPosition);
+                setDurationTextOnTestView(currentPositionTextView, mCurrentPosition);
                 updateSeekBar();
             }
         }
