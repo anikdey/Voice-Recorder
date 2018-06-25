@@ -199,6 +199,8 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
         mediaPlayer.stop();
         mediaPlayer.release();
         mediaPlayer = null;
+        isPlaying = false;
+        playbackPosition = 0;
         seekBar.setProgress(0);
         setPlayPauseIcon(R.drawable.play);
         setDurationTextOnTestView(currentPositionTextView, 0);
