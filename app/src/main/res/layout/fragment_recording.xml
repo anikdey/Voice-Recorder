@@ -40,10 +40,32 @@
         android:id="@+id/start_recording"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="@dimen/default_padding"
+        android:src="@drawable/baseline_pause_black_18"
+        android:tint="@color/white"
+        app:backgroundTint="@color/colorRed" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/pause_recording"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:layout_margin="@dimen/default_padding"
         android:src="@drawable/record"
         android:tint="@color/white"
         app:backgroundTint="@color/colorRed" />
+
+      <android.support.design.widget.FloatingActionButton
+          android:id="@+id/resume_recording"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="bottom|left"
+          android:layout_margin="@dimen/default_padding"
+          android:src="@drawable/baseline_play_arrow_black_48"
+          android:tint="@color/white"
+          app:backgroundTint="@color/colorRed" /><!---->
+
+
 
 </android.support.design.widget.CoordinatorLayout>

@@ -44,13 +44,6 @@ public class RecordingFragment extends BaseSupportFragment {
 
     }
 
-    private String getGeneratedFilePath() {
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +"/VoiceRecorder/";
-        File file = createFile(filePath, System.currentTimeMillis() + FILE_TYPE);
-        fileName = file.getAbsolutePath();
-        return fileName;
-    }
-
     private File createFile(String filePath, String fileName) {
         try {
             fileName = URLDecoder.decode(fileName, "UTF-8");
@@ -74,7 +67,7 @@ public class RecordingFragment extends BaseSupportFragment {
     protected void startRecording() {
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setOutputFile(getGeneratedFilePath());
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         try {
@@ -83,6 +76,13 @@ public class RecordingFragment extends BaseSupportFragment {
         } catch (IOException e) {
             Log.e(TAG, "prepare() failed");
         }
+    }
+
+    private String getGeneratedFilePath() {
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +"/VoiceRecorder/";
+        File file = createFile(filePath, System.currentTimeMillis() + FILE_TYPE);
+        fileName = file.getAbsolutePath();
+        return fileName;
     }
 
     @Override

@@ -1,7 +1,15 @@
 package com.javarank.voice_recorder.recorder.ui.activity;
 
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.common.BaseAppCompatActivity;
@@ -21,5 +29,6 @@ public class MainActivity extends BaseAppCompatActivity {
     public void setUpContentView() {
         setContentView(R.layout.activity_main);
     }
+
 
 }
