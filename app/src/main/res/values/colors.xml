@@ -11,4 +11,5 @@
     <color name="black">#000000</color>
     <color name="tabTextColor">#858C93</color>
     <color name="colorRed">#F44236</color>
+    <color name="deepGreen">#008666</color>
 </resources>

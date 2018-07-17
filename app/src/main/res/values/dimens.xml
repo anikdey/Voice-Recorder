@@ -6,4 +6,7 @@
     <dimen name="default_margin">16dp</dimen>
 
     <dimen name="text_size_16">16sp</dimen>
+    <dimen name="small_button_height_width">50dp</dimen>
+    <dimen name="text_size_32sp">32sp</dimen>
+    <dimen name="margin_20dp">20dp</dimen>
 </resources>

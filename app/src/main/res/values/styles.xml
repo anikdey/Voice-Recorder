@@ -8,4 +8,36 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="base_image_button_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="image_button_big_bg" parent="base_image_button_style">
+        <item name="android:background">@drawable/circle</item>
+        <item name="android:tint">@color/deepGreen</item>
+    </style>
+
+    <style name="record" parent="image_button_big_bg">
+        <item name="android:src">@drawable/baseline_mic_black_48</item>
+    </style>
+
+    <style name="pause" parent="image_button_big_bg">
+        <item name="android:src">@drawable/baseline_pause_black_48</item>
+    </style>
+
+    <style name="image_button_small_bg" parent="base_image_button_style">
+        <item name="android:background">@drawable/save_or_delete</item>
+        <item name="android:tint">@color/white</item>
+    </style>
+
+    <style name="save" parent="image_button_small_bg">
+        <item name="android:src">@drawable/baseline_save_black_18</item>
+    </style>
+
+    <style name="delete" parent="image_button_small_bg">
+        <item name="android:src">@drawable/baseline_delete_black_18</item>
+    </style>
+
+
 </resources>

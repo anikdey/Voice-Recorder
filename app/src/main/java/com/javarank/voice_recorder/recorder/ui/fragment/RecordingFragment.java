@@ -63,7 +63,7 @@ public class RecordingFragment extends BaseSupportFragment {
         return file;
     }
 
-    @OnClick(R.id.start_recording)
+    //@OnClick(R.id.start_recording)
     protected void startRecording() {
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);

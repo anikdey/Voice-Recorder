@@ -1,30 +1,25 @@
 package com.javarank.voice_recorder.recorder.ui.fragment;
 
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.common.BaseSupportFragment;
 import com.javarank.voice_recorder.recorder.listener.OnItemClickListener;
 import com.javarank.voice_recorder.recorder.ui.adapter.SavedRecordingAdapter;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 public class SavedRecordingListFragment extends BaseSupportFragment implements MediaPlayer.OnPreparedListener {
     public static final String TAG = SavedRecordingListFragment.class.getSimpleName();
