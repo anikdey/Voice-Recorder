@@ -1,5 +1,6 @@
 package com.javarank.voice_recorder.recorder.ui.fragment;
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,9 +15,15 @@ import android.view.ViewGroup;
 import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.common.BaseSupportFragment;
 import com.javarank.voice_recorder.recorder.listener.OnItemClickListener;
+import com.javarank.voice_recorder.recorder.models.RecordedItem;
 import com.javarank.voice_recorder.recorder.ui.adapter.SavedRecordingAdapter;
+import com.javarank.voice_recorder.recorder.util.Constants;
+import com.javarank.voice_recorder.recorder.util.StorageUtil;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,8 +35,6 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
     RecyclerView recyclerView;
 
     private SavedRecordingAdapter adapter;
-    private MediaPlayer mediaPlayer;
-    private int playbackPosition = 0;
     private List<String> itemsNames;
 
     public static SavedRecordingListFragment getNewInstance() {
@@ -47,7 +52,7 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)+"/music_file.mp3";
+                String path = adapter.getItem(position).getFilePath();
                 MediaPlayerDialogFragment fragment = MediaPlayerDialogFragment.getInstance(path);
                 fragment.setCancelable(false);
                 fragment.show(getFragmentManager(), MediaPlayerDialogFragment.TAG);
@@ -66,13 +71,52 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
     }
 
     private void setItems() {
-        itemsNames = new ArrayList<>();
-        itemsNames.add("Item 1");
-        itemsNames.add("Item 2");
-        itemsNames.add("Item 3");
-        itemsNames.add("Item 4");
-        adapter.addItems(itemsNames);
+        adapter.addItems(getRecordedItems());
         adapter.notifyDataSetChanged();
+    }
+
+    private List<RecordedItem> getRecordedItems() {
+        ArrayList<RecordedItem> songs = new ArrayList<>();
+        File targetDirector = new File(getStorageFolderPath());
+        File[] files = targetDirector.listFiles();
+        if(files != null) {
+            for (File file : files) {
+                String path = file.getAbsolutePath();
+                int lastIndexOfDot = path.lastIndexOf(".");
+                int lastIndexOfSlash = path.lastIndexOf("/");
+                int pathLength = path.length();
+                String extension = path.substring(lastIndexOfDot, pathLength);
+                if( extension.equalsIgnoreCase(".mp3") || extension.equalsIgnoreCase(".mp4") ) {
+                    String fileName = path.substring(lastIndexOfSlash+1, lastIndexOfDot);
+                    RecordedItem recordedItem = new RecordedItem();
+                    recordedItem.setSongName(fileName);
+                    recordedItem.setFilePath(path);
+                    recordedItem.setSongLength(getFileDuration(path));
+                    songs.add(recordedItem);
+                }
+            }
+        }
+        Collections.reverse(songs);
+        return songs;
+    }
+
+    private int getFileDuration(String filePath) {
+        int length = 0;
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mediaPlayer.setDataSource(filePath);
+            mediaPlayer.prepare();
+            length = mediaPlayer.getDuration();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return length;
+    }
+
+    private String getStorageFolderPath() {
+        String targetPath = StorageUtil.getAbsolutePath() + Constants.STORAGE_FOLDER_NAME;
+        return targetPath;
     }
 
     @Override

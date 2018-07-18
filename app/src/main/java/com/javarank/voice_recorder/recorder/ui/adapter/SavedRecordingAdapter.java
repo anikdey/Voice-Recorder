@@ -8,8 +8,10 @@ import android.widget.TextView;
 
 import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.recorder.listener.OnItemClickListener;
+import com.javarank.voice_recorder.recorder.models.RecordedItem;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,7 +19,7 @@ import butterknife.ButterKnife;
 public class SavedRecordingAdapter extends RecyclerView.Adapter<SavedRecordingAdapter.SavedRecordingViewHolder> {
 
     protected OnItemClickListener itemClickListener;
-    private List<String> itemNameList;
+    private List<RecordedItem> recordedItemList;
 
     @Override
     public SavedRecordingAdapter.SavedRecordingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -27,17 +29,28 @@ public class SavedRecordingAdapter extends RecyclerView.Adapter<SavedRecordingAd
 
     @Override
     public void onBindViewHolder(SavedRecordingAdapter.SavedRecordingViewHolder holder, int position) {
-        String itemName = itemNameList.get(position);
-        holder.itemNameTextView.setText(itemName);
+        RecordedItem song = recordedItemList.get(position);
+        holder.itemNameTextView.setText(song.getSongName());
+        setDurationTextOnTestView(holder.lengthTextView, song.getSongLength());
+    }
+
+    private void setDurationTextOnTestView(TextView textView, int length) {
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(length);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(length) - TimeUnit.MINUTES.toSeconds(minutes);
+        textView.setText(String.format("%02d:%02d", minutes, seconds));
     }
 
     @Override
     public int getItemCount() {
-        return itemNameList.size();
+        return recordedItemList.size();
     }
 
-    public void addItems(List<String> itemNameList) {
-        this.itemNameList = itemNameList;
+    public void addItems(List<RecordedItem> recordedItemList) {
+        this.recordedItemList = recordedItemList;
+    }
+
+    public RecordedItem getItem(int position) {
+        return recordedItemList.get(position);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -47,6 +60,8 @@ public class SavedRecordingAdapter extends RecyclerView.Adapter<SavedRecordingAd
     class SavedRecordingViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.item_name_text_view)
         TextView itemNameTextView;
+        @BindView(R.id.item_length_text_view)
+        TextView lengthTextView;
 
         public SavedRecordingViewHolder(View itemView) {
             super(itemView);

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.common.BaseSupportFragment;
+import com.javarank.voice_recorder.recorder.util.Constants;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,7 +80,7 @@ public class RecordingFragment extends BaseSupportFragment {
     }
 
     private String getGeneratedFilePath() {
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +"/VoiceRecorder/";
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + Constants.STORAGE_FOLDER_NAME;
         File file = createFile(filePath, System.currentTimeMillis() + FILE_TYPE);
         fileName = file.getAbsolutePath();
         return fileName;
