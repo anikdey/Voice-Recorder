@@ -39,5 +39,36 @@
         <item name="android:src">@drawable/baseline_delete_black_18</item>
     </style>
 
+    <style name="card_view_style">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/card_view_margin_2dp</item>
+        <item name="android:padding">@dimen/padding_5dp</item>
+    </style>
+
+    <style name="list_image_icon_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">@dimen/default_padding</item>
+        <item name="android:src">@drawable/play</item>
+        <item name="android:tint">@color/colorAccent</item>
+    </style>
+
+    <style name="list_item_base_text_view_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/tabTextColor</item>
+    </style>
+
+    <style name="file_name_text_view_style" parent="list_item_base_text_view_style">
+        <item name="android:layout_marginBottom">@dimen/margin_8dp</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+    </style>
+
+    <style name="file_length_text_view_style" parent="list_item_base_text_view_style">
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+    </style>
+
 
 </resources>
