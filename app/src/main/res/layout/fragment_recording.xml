@@ -15,10 +15,6 @@
         android:textColor="#000"
         android:textSize="@dimen/text_size_32sp" />
 
-    <ImageButton
-        android:id="@+id/start_recording_image_button"
-        style="@style/record" />
-
     <LinearLayout
         android:id="@+id/control_panel_linear_layout"
         android:layout_width="wrap_content"
@@ -33,12 +29,16 @@
             android:layout_marginRight="@dimen/margin_20dp" />
 
         <ImageButton
+            android:id="@+id/start_recording_image_button"
+            style="@style/record" />
+
+        <ImageButton
             android:id="@+id/pause_recording_image_button"
-            style="@style/pause"
-            android:layout_marginRight="@dimen/margin_20dp" />
+            style="@style/pause" />
 
         <ImageButton
             android:id="@+id/save_audio_image_button"
-            style="@style/save" />
+            style="@style/save"
+            android:layout_marginLeft="@dimen/margin_20dp" />
     </LinearLayout>
 </LinearLayout>

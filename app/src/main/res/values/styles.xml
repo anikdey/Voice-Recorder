@@ -24,11 +24,13 @@
 
     <style name="pause" parent="image_button_big_bg">
         <item name="android:src">@drawable/baseline_pause_black_48</item>
+        <item name="android:visibility">gone</item>
     </style>
 
     <style name="image_button_small_bg" parent="base_image_button_style">
         <item name="android:background">@drawable/save_or_delete</item>
         <item name="android:tint">@color/white</item>
+        <item name="android:visibility">gone</item>
     </style>
 
     <style name="save" parent="image_button_small_bg">

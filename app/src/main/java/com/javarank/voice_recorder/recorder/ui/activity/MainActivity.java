@@ -20,6 +20,4 @@ public class MainActivity extends BaseAppCompatActivity {
     public void setUpContentView() {
         setContentView(R.layout.activity_main);
     }
-
-
 }
