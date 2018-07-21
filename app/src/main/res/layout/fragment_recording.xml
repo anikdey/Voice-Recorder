@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/seconds_counter_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
@@ -14,23 +15,30 @@
         android:textColor="#000"
         android:textSize="@dimen/text_size_32sp" />
 
-    <ImageButton style="@style/record" />
+    <ImageButton
+        android:id="@+id/start_recording_image_button"
+        style="@style/record" />
 
     <LinearLayout
+        android:id="@+id/control_panel_linear_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="bottom"
         android:orientation="horizontal"
-        android:paddingBottom="5dp">
+        android:paddingBottom="@dimen/padding_5dp">
 
         <ImageButton
+            android:id="@+id/delete_audio_image_button"
             style="@style/delete"
             android:layout_marginRight="@dimen/margin_20dp" />
 
         <ImageButton
+            android:id="@+id/pause_recording_image_button"
             style="@style/pause"
             android:layout_marginRight="@dimen/margin_20dp" />
 
-        <ImageButton style="@style/save" />
+        <ImageButton
+            android:id="@+id/save_audio_image_button"
+            style="@style/save" />
     </LinearLayout>
 </LinearLayout>
