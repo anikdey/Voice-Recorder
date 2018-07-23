@@ -6,12 +6,11 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/seconds_counter_text_view"
+    <Chronometer
+        android:id="@+id/sceonds_recorded_chronometer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
-        android:text="00:00:00"
         android:textColor="#000"
         android:textSize="@dimen/text_size_32sp" />
 
@@ -33,7 +32,7 @@
             style="@style/record" />
 
         <ImageButton
-            android:id="@+id/pause_recording_image_button"
+            android:id="@+id/stop_recording_image_button"
             style="@style/pause" />
 
         <ImageButton

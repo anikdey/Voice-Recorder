@@ -10,6 +10,7 @@ import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.recorder.listener.OnItemClickListener;
 import com.javarank.voice_recorder.recorder.models.RecordedItem;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +21,10 @@ public class SavedRecordingAdapter extends RecyclerView.Adapter<SavedRecordingAd
 
     protected OnItemClickListener itemClickListener;
     private List<RecordedItem> recordedItemList;
+
+    public SavedRecordingAdapter() {
+        recordedItemList = new ArrayList<>();
+    }
 
     @Override
     public SavedRecordingAdapter.SavedRecordingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -55,6 +60,10 @@ public class SavedRecordingAdapter extends RecyclerView.Adapter<SavedRecordingAd
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.itemClickListener = onItemClickListener;
+    }
+
+    public void clear() {
+        recordedItemList.clear();
     }
 
     class SavedRecordingViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

@@ -1,11 +1,13 @@
 package com.javarank.voice_recorder.recorder.ui.fragment;
 
+import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,15 +54,41 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                String path = adapter.getItem(position).getFilePath();
-                MediaPlayerDialogFragment fragment = MediaPlayerDialogFragment.getInstance(path);
-                fragment.setCancelable(false);
-                fragment.show(getFragmentManager(), MediaPlayerDialogFragment.TAG);
+                String filePath = adapter.getItem(position).getFilePath();
+                showAlertDialog(filePath);
+                //MediaPlayerDialogFragment fragment = MediaPlayerDialogFragment.getInstance(path);
+                //fragment.setCancelable(false);
+                //fragment.show(getFragmentManager(), MediaPlayerDialogFragment.TAG);
+
             }
         });
 
         initRecyclerView();
-        setItems();
+        loadRecordedAudios();
+    }
+
+    private void showAlertDialog(final String filePath) {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(getContext());
+        }
+        builder.setTitle("Delete audio")
+                .setMessage("Are you sure you want to delete this audio?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        StorageUtil.deleteFile(filePath);
+                        loadRecordedAudios();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     private  void initRecyclerView(){
@@ -70,7 +98,8 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
         recyclerView.setAdapter(adapter);
     }
 
-    private void setItems() {
+    private void loadRecordedAudios() {
+        adapter.clear();
         adapter.addItems(getRecordedItems());
         adapter.notifyDataSetChanged();
     }
