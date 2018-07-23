@@ -37,6 +37,11 @@
         <item name="android:src">@drawable/baseline_save_black_18</item>
     </style>
 
+    <style name="rename" parent="image_button_small_bg">
+        <item name="android:src">@drawable/baseline_send_black_24</item>
+        <item name="android:visibility">visible</item>
+    </style>
+
     <style name="delete" parent="image_button_small_bg">
         <item name="android:src">@drawable/baseline_delete_black_18</item>
     </style>
@@ -70,6 +75,13 @@
 
     <style name="file_length_text_view_style" parent="list_item_base_text_view_style">
         <item name="android:textSize">@dimen/text_size_14sp</item>
+    </style>
+
+    <style name="custom_name_edit_text_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">@dimen/margin_8dp</item>
     </style>
 
 

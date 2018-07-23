@@ -1,6 +1,8 @@
 package com.javarank.voice_recorder.recorder.ui.fragment;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -32,7 +34,7 @@ import butterknife.BindView;
 
 public class SavedRecordingListFragment extends BaseSupportFragment implements MediaPlayer.OnPreparedListener {
     public static final String TAG = SavedRecordingListFragment.class.getSimpleName();
-
+    private static final int RENAME_SAVED_AUDIO_FILE_REQUEST_CODE = 300;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
@@ -55,14 +57,18 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
             @Override
             public void onItemClick(int position, View view) {
                 String filePath = adapter.getItem(position).getFilePath();
-                showAlertDialog(filePath);
-                //MediaPlayerDialogFragment fragment = MediaPlayerDialogFragment.getInstance(path);
-                //fragment.setCancelable(false);
-                //fragment.show(getFragmentManager(), MediaPlayerDialogFragment.TAG);
+                //showAlertDialog(filePath);
 
+                //RenameAudioDialogFragment fragment = RenameAudioDialogFragment.getInstance(filePath);
+                //fragment.setCancelable(true);
+                //fragment.setTargetFragment(SavedRecordingListFragment.this, RENAME_SAVED_AUDIO_FILE_REQUEST_CODE);
+                //fragment.show(getFragmentManager(), RenameAudioDialogFragment.TAG);
+
+                MediaPlayerDialogFragment fragment = MediaPlayerDialogFragment.getInstance(filePath);
+                fragment.setCancelable(false);
+                fragment.show(getFragmentManager(), MediaPlayerDialogFragment.TAG);
             }
         });
-
         initRecyclerView();
         loadRecordedAudios();
     }
@@ -161,5 +167,15 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         mediaPlayer.start();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if( resultCode != Activity.RESULT_OK ) {
+            return;
+        }
+        if( requestCode == RENAME_SAVED_AUDIO_FILE_REQUEST_CODE ) {
+            loadRecordedAudios();
+        }
     }
 }

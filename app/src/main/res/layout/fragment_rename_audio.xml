@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:minWidth="1000dp"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="@dimen/default_padding"
+    android:gravity="center">
+
+    <EditText
+        android:id="@+id/custom_name_edit_text"
+        style="@style/custom_name_edit_text_style"
+        android:hint="Enter name"
+        />
+    <ImageButton
+        android:id="@+id/rename_image_button"
+        style="@style/rename"
+        />
+</LinearLayout>

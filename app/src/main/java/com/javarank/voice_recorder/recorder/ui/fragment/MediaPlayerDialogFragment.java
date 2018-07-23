@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.javarank.voice_recorder.R;
+import com.javarank.voice_recorder.common.BaseDialogFragment;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -29,7 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MediaPlayerDialogFragment extends DialogFragment implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+public class MediaPlayerDialogFragment extends BaseDialogFragment implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
     public static final String TAG = MediaPlayerDialogFragment.class.getSimpleName();
     private static final String ARG_FILE_PATH = "path";
 
@@ -65,22 +67,17 @@ public class MediaPlayerDialogFragment extends DialogFragment implements MediaPl
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        return dialog;
+    public View getRootView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_media_player, container, false);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_media_player, container, false);
-        ButterKnife.bind(this, view);
-        init();
-        return view;
+    public void onCreateComponent() {
+
     }
 
-    private void init() {
+    @Override
+    public void init() {
         setUpSeekBarListener();
     }
 

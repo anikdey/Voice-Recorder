@@ -1,5 +1,6 @@
 package com.javarank.voice_recorder.recorder.ui.fragment;
 
+import android.content.Context;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.common.BaseSupportFragment;
 import com.javarank.voice_recorder.recorder.util.Constants;
+import com.javarank.voice_recorder.recorder.util.StorageUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +45,6 @@ public class RecordingFragment extends BaseSupportFragment {
 
     private boolean isAlreadyStartedRecording = false;
     private int secondsCounter = 0;
-    private static final String FILE_TYPE = ".mp4";
     private String fileName = null;
     private MediaRecorder mediaRecorder;
 
@@ -62,13 +63,13 @@ public class RecordingFragment extends BaseSupportFragment {
 
     }
 
-    private File createFile(String filePath, String fileName) {
+    private File createFile(String storageDirectory, String fileName) {
         try {
             fileName = URLDecoder.decode(fileName, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        File directory = new File(filePath);
+        File directory = new File(storageDirectory);
         if (!directory.exists()) {
             directory.mkdirs();
         }
@@ -205,8 +206,9 @@ public class RecordingFragment extends BaseSupportFragment {
     }
 
     private String getGeneratedFilePath() {
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + Constants.STORAGE_FOLDER_NAME;
-        File file = createFile(filePath, System.currentTimeMillis() + FILE_TYPE);
+        //String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + Constants.STORAGE_FOLDER_NAME;
+        String storageDirectory = StorageUtil.getStorageDirectory();
+        File file = createFile(storageDirectory, System.currentTimeMillis() + Constants.FILE_TYPE_MP4);
         fileName = file.getAbsolutePath();
         return fileName;
     }
