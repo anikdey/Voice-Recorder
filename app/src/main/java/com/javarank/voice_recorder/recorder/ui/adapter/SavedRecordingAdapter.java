@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.javarank.voice_recorder.R;
@@ -71,17 +73,33 @@ public class SavedRecordingAdapter extends RecyclerView.Adapter<SavedRecordingAd
         TextView itemNameTextView;
         @BindView(R.id.item_length_text_view)
         TextView lengthTextView;
+        @BindView(R.id.outer_layout)
+        LinearLayout layout;
+        @BindView(R.id.delete_image_button)
+        ImageView deleteImageButton;
+        @BindView(R.id.edit_image_button)
+        ImageView editImageButton;
+
 
         public SavedRecordingViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
+            layout.setOnClickListener(this);
+            deleteImageButton.setOnClickListener(this);
+            editImageButton.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             if( itemClickListener != null && getAdapterPosition() != RecyclerView.NO_POSITION ) {
-                itemClickListener.onItemClick(getAdapterPosition(), view);
+                if( view.getId() == R.id.outer_layout ) {
+                    itemClickListener.onItemClick(getAdapterPosition(), view);
+                } else if( view.getId() == R.id.delete_image_button ) {
+                    itemClickListener.showDeleteDialog(getAdapterPosition());
+                } else if( view.getId() == R.id.edit_image_button ) {
+                    itemClickListener.showRenameDialogFragment(getAdapterPosition());
+                }
             }
         }
     }

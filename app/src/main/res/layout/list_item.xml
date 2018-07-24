@@ -1,38 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<com.javarank.voice_recorder.recorder.ui.customview.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_gravity="center_vertical"
+    app:dragFromEdge="right">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
-        style="@style/card_view_style"
-        card_view:cardCornerRadius="@dimen/card_view_corner_radius_4dp">
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="@dimen/padding_8dp">
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|end"
+            android:orientation="horizontal"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp">
 
-            <ImageView style="@style/list_image_icon_style" />
+            <ImageButton
+                android:id="@+id/delete_image_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:tint="@color/colorRed"
+                app:srcCompat="@drawable/ic_info_outline" />
+
+            <ImageButton
+                android:id="@+id/edit_image_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:tint="@color/colorPrimary"
+                app:srcCompat="@drawable/ic_edit" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/outer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view"
+            style="@style/card_view_style"
+            app:cardCornerRadius="@dimen/card_view_corner_radius_4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:gravity="center"
+                android:padding="@dimen/padding_8dp">
 
-                <TextView
-                    android:id="@+id/item_name_text_view"
-                    style="@style/file_name_text_view_style"
-                    android:text="File Name" />
+                <ImageView style="@style/list_image_icon_style" />
 
-                <TextView
-                    android:id="@+id/item_length_text_view"
-                    style="@style/file_length_text_view_style"
-                    android:text="File Name" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/item_name_text_view"
+                        style="@style/file_name_text_view_style"
+                        android:text="File Name" />
+
+                    <TextView
+                        android:id="@+id/item_length_text_view"
+                        style="@style/file_length_text_view_style"
+                        android:text="File Name" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+</com.javarank.voice_recorder.recorder.ui.customview.SwipeRevealLayout>
+

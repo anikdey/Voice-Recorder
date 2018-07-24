@@ -57,16 +57,24 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
             @Override
             public void onItemClick(int position, View view) {
                 String filePath = adapter.getItem(position).getFilePath();
-                //showAlertDialog(filePath);
-
-                //RenameAudioDialogFragment fragment = RenameAudioDialogFragment.getInstance(filePath);
-                //fragment.setCancelable(true);
-                //fragment.setTargetFragment(SavedRecordingListFragment.this, RENAME_SAVED_AUDIO_FILE_REQUEST_CODE);
-                //fragment.show(getFragmentManager(), RenameAudioDialogFragment.TAG);
-
                 MediaPlayerDialogFragment fragment = MediaPlayerDialogFragment.getInstance(filePath);
                 fragment.setCancelable(false);
                 fragment.show(getFragmentManager(), MediaPlayerDialogFragment.TAG);
+            }
+
+            @Override
+            public void showDeleteDialog(int position) {
+                String filePath = adapter.getItem(position).getFilePath();
+                showAlertDialog(filePath);
+            }
+
+            @Override
+            public void showRenameDialogFragment(int position) {
+                String filePath = adapter.getItem(position).getFilePath();
+                RenameAudioDialogFragment fragment = RenameAudioDialogFragment.getInstance(filePath);
+                fragment.setCancelable(true);
+                fragment.setTargetFragment(SavedRecordingListFragment.this, RENAME_SAVED_AUDIO_FILE_REQUEST_CODE);
+                fragment.show(getFragmentManager(), RenameAudioDialogFragment.TAG);
             }
         });
         initRecyclerView();
