@@ -25,7 +25,7 @@
         <ImageButton
             android:id="@+id/delete_audio_image_button"
             style="@style/delete"
-            android:layout_marginRight="@dimen/margin_20dp" />
+            android:layout_marginRight="@dimen/margin_10dp" />
 
         <ImageButton
             android:id="@+id/start_recording_image_button"
@@ -38,6 +38,6 @@
         <ImageButton
             android:id="@+id/save_audio_image_button"
             style="@style/save"
-            android:layout_marginLeft="@dimen/margin_20dp" />
+            android:layout_marginLeft="@dimen/margin_10dp" />
     </LinearLayout>
 </LinearLayout>

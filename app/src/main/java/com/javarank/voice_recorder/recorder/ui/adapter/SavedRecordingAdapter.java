@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.recorder.listener.OnItemClickListener;
 import com.javarank.voice_recorder.recorder.models.RecordedItem;
+import com.javarank.voice_recorder.recorder.util.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,14 +39,10 @@ public class SavedRecordingAdapter extends RecyclerView.Adapter<SavedRecordingAd
     public void onBindViewHolder(SavedRecordingAdapter.SavedRecordingViewHolder holder, int position) {
         RecordedItem song = recordedItemList.get(position);
         holder.itemNameTextView.setText(song.getSongName());
-        setDurationTextOnTestView(holder.lengthTextView, song.getSongLength());
+        Utility.setDurationTextOnTextView(holder.lengthTextView, song.getSongLength());
     }
 
-    private void setDurationTextOnTestView(TextView textView, int length) {
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(length);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(length) - TimeUnit.MINUTES.toSeconds(minutes);
-        textView.setText(String.format("%02d:%02d", minutes, seconds));
-    }
+
 
     @Override
     public int getItemCount() {

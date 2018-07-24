@@ -84,5 +84,50 @@
         <item name="android:layout_marginRight">@dimen/margin_8dp</item>
     </style>
 
+    <style name="audio_timer_text_view_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_below">@+id/seek_bar</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+    </style>
+
+    <style name="seek_bar_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/margin_8dp</item>
+        <item name="android:layout_marginBottom">@dimen/margin_8dp</item>
+        <item name="android:layout_below">@+id/file_name_container_linear_layout</item>
+    </style>
+
+    <style name="audio_player_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:tint">@color/white</item>
+    </style>
+
+    <style name="cancel_playing_audio" parent="audio_player_button">
+        <item name="android:src">@drawable/close_dialog</item>
+    </style>
+
+    <style name="play_audio" parent="audio_player_button">
+        <item name="android:src">@drawable/play</item>
+    </style>
+
+    <style name="horizontal_linear_layout">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="now_playing_file_name_text_view_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">@dimen/default_margin</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+    </style>
+
 
 </resources>

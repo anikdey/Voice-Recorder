@@ -39,7 +39,7 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
     RecyclerView recyclerView;
 
     private SavedRecordingAdapter adapter;
-    private List<String> itemsNames;
+    private ArrayList<RecordedItem> recordings;
 
     public static SavedRecordingListFragment getNewInstance() {
         SavedRecordingListFragment fragment = new SavedRecordingListFragment();
@@ -57,7 +57,7 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
             @Override
             public void onItemClick(int position, View view) {
                 String filePath = adapter.getItem(position).getFilePath();
-                MediaPlayerDialogFragment fragment = MediaPlayerDialogFragment.getInstance(filePath);
+                MediaPlayerDialogFragment fragment = MediaPlayerDialogFragment.getInstance(position, recordings);
                 fragment.setCancelable(false);
                 fragment.show(getFragmentManager(), MediaPlayerDialogFragment.TAG);
             }
@@ -114,11 +114,12 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
 
     private void loadRecordedAudios() {
         adapter.clear();
-        adapter.addItems(getRecordedItems());
+        recordings = getRecordedItems();
+        adapter.addItems(recordings);
         adapter.notifyDataSetChanged();
     }
 
-    private List<RecordedItem> getRecordedItems() {
+    private ArrayList<RecordedItem> getRecordedItems() {
         ArrayList<RecordedItem> songs = new ArrayList<>();
         File targetDirector = new File(getStorageFolderPath());
         File[] files = targetDirector.listFiles();

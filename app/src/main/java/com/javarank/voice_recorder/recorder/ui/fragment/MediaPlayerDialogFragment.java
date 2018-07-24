@@ -22,9 +22,13 @@ import android.widget.Toast;
 
 import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.common.BaseDialogFragment;
+import com.javarank.voice_recorder.recorder.models.RecordedItem;
+import com.javarank.voice_recorder.recorder.util.Utility;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -34,9 +38,13 @@ import butterknife.OnClick;
 public class MediaPlayerDialogFragment extends BaseDialogFragment implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
     public static final String TAG = MediaPlayerDialogFragment.class.getSimpleName();
     private static final String ARG_FILE_PATH = "path";
+    private static final String ARG_CURRENT_POSITION = "current_position";
+    private static final String ARG_RECORDINGS = "items";
 
     @BindView(R.id.current_position_text_view)
     TextView currentPositionTextView;
+    @BindView(R.id.file_name_text_view)
+    TextView fileNameTextView;
     @BindView(R.id.total_duration_text_view)
     TextView totalDurationTextView;
     @BindView(R.id.seek_bar)
@@ -45,15 +53,19 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
     ImageView playPauseImageView;
 
     private Handler mHandler = new Handler();
-    private String filePath;
+    //private String filePath;
     private MediaPlayer mediaPlayer;
     private int playbackPosition = 0;
     private boolean isPlaying = false;
+    private int currentPosition = 0;
+    private List<RecordedItem> recordings;
 
-    public static MediaPlayerDialogFragment getInstance(String path) {
+    public static MediaPlayerDialogFragment getInstance(int position, ArrayList<RecordedItem> recordings) {
         MediaPlayerDialogFragment fragment = new MediaPlayerDialogFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_FILE_PATH, path);
+        //args.putString(ARG_FILE_PATH, path);
+        args.putInt(ARG_CURRENT_POSITION, position);
+        args.putParcelableArrayList(ARG_RECORDINGS,recordings);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,7 +74,9 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            filePath = getArguments().getString(ARG_FILE_PATH);
+            //filePath = getArguments().getString(ARG_FILE_PATH);
+            currentPosition = getArguments().getInt(ARG_CURRENT_POSITION);
+            recordings = getArguments().getParcelableArrayList(ARG_RECORDINGS);
         }
     }
 
@@ -79,6 +93,12 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
     @Override
     public void init() {
         setUpSeekBarListener();
+        initializeFileNameAndDuration(recordings.get(currentPosition));
+    }
+
+    private void initializeFileNameAndDuration(RecordedItem recordedItem) {
+        Utility.setDurationTextOnTextView(totalDurationTextView, recordedItem.getSongLength());
+        fileNameTextView.setText(recordedItem.getSongName());
     }
 
     private void setUpSeekBarListener() {
@@ -96,7 +116,7 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
                     updateSeekBar();
                     setDurationTextOnTestView(currentPositionTextView, mediaPlayer.getCurrentPosition());
                 } else if (mediaPlayer == null && fromUser) {
-                    prepareMediaPlayerFromPoint(progress);
+                    prepareMediaPlayerFromPoint(progress, recordings.get(currentPosition).getFilePath());
                     updateSeekBar();
                 }
             }
@@ -123,11 +143,11 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
         if (isPlaying) {
             pausePlaying();
         } else {
-            startPlaying();
+            startPlaying(recordings.get(currentPosition).getFilePath());
         }
     }
 
-    private void startPlaying() {
+    private void startPlaying(String filePath) {
         killMediaPlayer();
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -159,7 +179,7 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
         }
     }
 
-    private void prepareMediaPlayerFromPoint(int progress) {
+    private void prepareMediaPlayerFromPoint(int progress, String filePath) {
         killMediaPlayer();
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
