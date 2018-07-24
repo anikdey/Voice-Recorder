@@ -2,6 +2,7 @@ package com.javarank.voice_recorder.recorder.ui.fragment;
 
 
 import android.app.Dialog;
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -49,6 +50,8 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
     TextView totalDurationTextView;
     @BindView(R.id.seek_bar)
     SeekBar seekBar;
+    @BindView(R.id.volume_bar)
+    SeekBar volumeSeekBar;
     @BindView(R.id.play_pause_audio_image_view)
     ImageView playPauseImageView;
 
@@ -59,6 +62,7 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
     private boolean isPlaying = false;
     private int currentPosition = 0;
     private List<RecordedItem> recordings;
+    private AudioManager audioManager;
 
     public static MediaPlayerDialogFragment getInstance(int position, ArrayList<RecordedItem> recordings) {
         MediaPlayerDialogFragment fragment = new MediaPlayerDialogFragment();
@@ -94,11 +98,36 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
     public void init() {
         setUpSeekBarListener();
         initializeFileNameAndDuration(recordings.get(currentPosition));
+        initializeVolumeSeekBar();
     }
 
     private void initializeFileNameAndDuration(RecordedItem recordedItem) {
         Utility.setDurationTextOnTextView(totalDurationTextView, recordedItem.getSongLength());
         fileNameTextView.setText(recordedItem.getSongName());
+    }
+
+    private void initializeVolumeSeekBar() {
+        audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        volumeSeekBar.setMax(maxVolume);
+        volumeSeekBar.setProgress(currentVolume);
+        volumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     private void setUpSeekBarListener() {
