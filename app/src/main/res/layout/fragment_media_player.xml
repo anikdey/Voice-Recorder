@@ -51,6 +51,6 @@
             android:id="@+id/volume_bar"
             style="@style/seek_bar_style"
             android:layout_marginLeft="@dimen/margin_8dp"
-            android:layout_toRightOf="@+id/play_pause_audio_image_view" />
+            android:layout_toRightOf="@+id/play_pause_audio_image_view"/>
     </RelativeLayout>
 </RelativeLayout>

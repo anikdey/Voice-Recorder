@@ -42,8 +42,6 @@ public class SavedRecordingAdapter extends RecyclerView.Adapter<SavedRecordingAd
         Utility.setDurationTextOnTextView(holder.lengthTextView, song.getSongLength());
     }
 
-
-
     @Override
     public int getItemCount() {
         return recordedItemList.size();
@@ -76,7 +74,6 @@ public class SavedRecordingAdapter extends RecyclerView.Adapter<SavedRecordingAd
         ImageView deleteImageButton;
         @BindView(R.id.edit_image_button)
         ImageView editImageButton;
-
 
         public SavedRecordingViewHolder(View itemView) {
             super(itemView);

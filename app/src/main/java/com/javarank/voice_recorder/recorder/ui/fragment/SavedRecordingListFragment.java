@@ -56,7 +56,7 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                String filePath = adapter.getItem(position).getFilePath();
+                //String filePath = adapter.getItem(position).getFilePath();
                 MediaPlayerDialogFragment fragment = MediaPlayerDialogFragment.getInstance(position, recordings);
                 fragment.setCancelable(false);
                 fragment.show(getFragmentManager(), MediaPlayerDialogFragment.TAG);
@@ -93,6 +93,7 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         StorageUtil.deleteFile(filePath);
+                        initRecyclerView();
                         loadRecordedAudios();
                     }
                 })
@@ -184,6 +185,7 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
             return;
         }
         if( requestCode == RENAME_SAVED_AUDIO_FILE_REQUEST_CODE ) {
+            initRecyclerView();
             loadRecordedAudios();
         }
     }
