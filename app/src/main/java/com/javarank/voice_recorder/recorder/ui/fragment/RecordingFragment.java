@@ -91,19 +91,6 @@ public class RecordingFragment extends BaseSupportFragment {
 
     @OnClick(R.id.start_recording_image_button)
     protected void startRecordingImageButtonClick() {
-        /*if( isAlreadyStartedRecording ) {
-            resumeTimer();
-            resumeRecording();
-            controlRecordingButtonVisibility(View.GONE);
-            controlStopRecordingButtonVisibility(View.VISIBLE);
-            controlDeleteAndSaveButtonVisibility(View.GONE);
-        } else {
-            startTimer();
-            isAlreadyStartedRecording = true;
-            controlRecordingButtonVisibility(View.GONE);
-            controlStopRecordingButtonVisibility(View.VISIBLE);
-            startRecording();
-        }*/
         startTimer();
         isAlreadyStartedRecording = true;
         controlRecordingButtonVisibility(View.GONE);
@@ -127,9 +114,6 @@ public class RecordingFragment extends BaseSupportFragment {
 
     @OnClick(R.id.stop_recording_image_button)
     protected void onStopImageButtonClick() {
-        //pauseTimer();
-        //pauseRecording();
-        //controlRecordingButtonVisibility(View.VISIBLE);
         stopRecording();
         stopTimer();
         controlDeleteAndSaveButtonVisibility(View.VISIBLE);
