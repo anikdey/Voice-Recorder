@@ -125,10 +125,6 @@ public class RecordingFragment extends BaseSupportFragment {
         }
     }
 
-    protected void resumeRecording() {
-        // To be implemented in version 2.0
-    }
-
     @OnClick(R.id.stop_recording_image_button)
     protected void onStopImageButtonClick() {
         //pauseTimer();
@@ -145,12 +141,6 @@ public class RecordingFragment extends BaseSupportFragment {
             mediaRecorder.stop();
             mediaRecorder.release();
             mediaRecorder = null;
-        }
-    }
-
-    private void pauseRecording() {
-        if( mediaRecorder != null ) {
-            //mediaRecorder.pause();
         }
     }
 
@@ -172,11 +162,7 @@ public class RecordingFragment extends BaseSupportFragment {
     protected void onSaveAudioImageButtonClick() {
         postAudioSavedEvent();
         restoreInitialState();
-    }
-
-    private void postAudioSavedEvent(){
-        //Todo post event
-        EventBus.getDefault().postSticky(new AudioAddedEvent());
+        showMessage(getContext().getString(R.string.saved));
     }
 
     @OnClick(R.id.rename_audio_image_button)
@@ -196,18 +182,12 @@ public class RecordingFragment extends BaseSupportFragment {
         boolean isDeleted = StorageUtil.deleteFile(fileName);
         if( isDeleted ) {
             restoreInitialState();
-            Toast.makeText(getContext(), R.string.deleted, Toast.LENGTH_SHORT).show();
+            showMessage(getContext().getString(R.string.deleted));
         }
     }
 
-    private void restoreInitialState() {
-        resetTimer();
-        fileName = null;
-        isAlreadyStartedRecording = false;
-        setDurationTextOnTestView(timerTextView, 0);
-        controlStopRecordingButtonVisibility(View.GONE);
-        controlDeleteAndSaveButtonVisibility(View.GONE);
-        controlRecordingButtonVisibility(View.VISIBLE);
+    private void showMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     private void startTimer() {
@@ -223,19 +203,29 @@ public class RecordingFragment extends BaseSupportFragment {
                     }
                 });
             }
-        }, 0 ,1000);
+        }, 0 ,Constants.ONE_THOUSAND_SECOND);
 
     }
 
     private void setDurationTextOnTestView(TextView textView, int length) {
-        int min = length / 60;
-        int sec = length % 60;
-        textView.setText(String.format("%02d:%02d", min, sec));
+        int min = length / Constants.SIXTY_SECOND;
+        int sec = length % Constants.SIXTY_SECOND;
+        textView.setText(String.format(getContext().getString(R.string.passed_time_format), min, sec));
     }
 
     private void stopTimer() {
         passedSeconds = 0;
         timer.cancel();
+    }
+
+    private void restoreInitialState() {
+        resetTimer();
+        fileName = null;
+        isAlreadyStartedRecording = false;
+        setDurationTextOnTestView(timerTextView, 0);
+        controlStopRecordingButtonVisibility(View.GONE);
+        controlDeleteAndSaveButtonVisibility(View.GONE);
+        controlRecordingButtonVisibility(View.VISIBLE);
     }
 
     private void resetTimer() {
@@ -248,6 +238,16 @@ public class RecordingFragment extends BaseSupportFragment {
 
     private void resumeTimer() {
         // To be implemented in version 2.0
+    }
+
+    protected void resumeRecording() {
+        // To be implemented in version 2.0
+    }
+
+    private void pauseRecording() {
+        if( mediaRecorder != null ) {
+            //mediaRecorder.pause();
+        }
     }
 
     private String getGeneratedFilePath() {
@@ -266,6 +266,10 @@ public class RecordingFragment extends BaseSupportFragment {
             restoreInitialState();
             postAudioSavedEvent();
         }
+    }
+
+    private void postAudioSavedEvent(){
+        EventBus.getDefault().postSticky(new AudioAddedEvent());
     }
 
     @Override

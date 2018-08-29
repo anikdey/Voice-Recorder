@@ -135,5 +135,18 @@
         <item name="android:textSize">@dimen/text_size_16sp</item>
     </style>
 
+    <style name="base_action_style">
+        <item name="android:layout_width">@dimen/small_button_height_width</item>
+        <item name="android:layout_height">@dimen/small_button_height_width</item>
+    </style>
 
+    <style name="action_delete" parent="base_action_style">
+        <item name="android:tint">@color/colorRed</item>
+        <item name="android:src">@drawable/ic_info_outline</item>
+    </style>
+
+    <style name="action_edit" parent="base_action_style">
+        <item name="android:tint">@color/colorPrimary</item>
+        <item name="android:src">@drawable/ic_edit</item>
+    </style>
 </resources>

@@ -16,22 +16,16 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical|end"
             android:orientation="horizontal"
-            android:paddingEnd="20dp"
-            android:paddingStart="20dp">
+            android:paddingEnd="@dimen/padding_20dp"
+            android:paddingStart="@dimen/padding_20dp">
 
             <ImageButton
                 android:id="@+id/delete_image_button"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:tint="@color/colorRed"
-                app:srcCompat="@drawable/ic_info_outline" />
+                style="@style/action_delete" />
 
             <ImageButton
                 android:id="@+id/edit_image_button"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:tint="@color/colorPrimary"
-                app:srcCompat="@drawable/ic_edit" />
+                style="@style/action_edit"/>
 
         </LinearLayout>
     </FrameLayout>

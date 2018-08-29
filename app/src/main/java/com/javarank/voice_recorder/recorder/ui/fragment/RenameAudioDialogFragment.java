@@ -1,25 +1,14 @@
 package com.javarank.voice_recorder.recorder.ui.fragment;
 
-
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.javarank.voice_recorder.R;
@@ -27,12 +16,7 @@ import com.javarank.voice_recorder.common.BaseDialogFragment;
 import com.javarank.voice_recorder.recorder.util.Constants;
 import com.javarank.voice_recorder.recorder.util.StorageUtil;
 
-import java.io.IOException;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class RenameAudioDialogFragment extends BaseDialogFragment {
