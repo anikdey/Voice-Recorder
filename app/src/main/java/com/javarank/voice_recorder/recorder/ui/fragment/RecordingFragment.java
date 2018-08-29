@@ -1,5 +1,7 @@
 package com.javarank.voice_recorder.recorder.ui.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,6 +31,7 @@ import butterknife.OnClick;
 
 public class RecordingFragment extends BaseSupportFragment {
     public static final String TAG = RecordingFragment.class.getSimpleName();
+    private static final int RENAME_RECORDED_AUDIO_FILE_REQUEST_CODE = 301;
 
     @BindView(R.id.start_recording_image_button)
     ImageView startRecordingImageButton;
@@ -38,6 +41,8 @@ public class RecordingFragment extends BaseSupportFragment {
     ImageView stopRecordingImageButton;
     @BindView(R.id.save_audio_image_button)
     ImageView saveAudioImageButton;
+    @BindView(R.id.rename_audio_image_button)
+    ImageView renameAudioImageButton;
     @BindView(R.id.timer_text_view)
     TextView timerTextView;
 
@@ -157,35 +162,48 @@ public class RecordingFragment extends BaseSupportFragment {
     protected void controlDeleteAndSaveButtonVisibility(int visibility) {
         deleteAudioImageButton.setVisibility(visibility);
         saveAudioImageButton.setVisibility(visibility);
+        renameAudioImageButton.setVisibility(visibility);
     }
 
     @OnClick(R.id.save_audio_image_button)
     protected void onSaveAudioImageButtonClick() {
-        //Todo post event
+        postAudioSavedEvent();
         restoreInitialState();
+    }
+
+    private void postAudioSavedEvent(){
+        //Todo post event
+    }
+
+    @OnClick(R.id.rename_audio_image_button)
+    protected void renameAudioFile() {
+        RenameAudioDialogFragment fragment = RenameAudioDialogFragment.getInstance(fileName);
+        fragment.setCancelable(true);
+        fragment.setTargetFragment(RecordingFragment.this, RENAME_RECORDED_AUDIO_FILE_REQUEST_CODE);
+        fragment.show(getFragmentManager(), RenameAudioDialogFragment.TAG);
     }
 
     @OnClick(R.id.delete_audio_image_button)
     protected void onDeleteAudioImageButtonClick() {
         deleteFile();
-        restoreInitialState();
     }
 
     private void deleteFile() {
         boolean isDeleted = StorageUtil.deleteFile(fileName);
         if( isDeleted ) {
-            fileName = null;
+            restoreInitialState();
             Toast.makeText(getContext(), R.string.deleted, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void restoreInitialState() {
         resetTimer();
+        fileName = null;
+        isAlreadyStartedRecording = false;
         setDurationTextOnTestView(timerTextView, 0);
         controlStopRecordingButtonVisibility(View.GONE);
         controlDeleteAndSaveButtonVisibility(View.GONE);
         controlRecordingButtonVisibility(View.VISIBLE);
-        isAlreadyStartedRecording = false;
     }
 
     private void startTimer() {
@@ -233,6 +251,17 @@ public class RecordingFragment extends BaseSupportFragment {
         File file = createFile(storageDirectory, System.currentTimeMillis() + Constants.FILE_TYPE_MP4);
         fileName = file.getAbsolutePath();
         return fileName;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if( resultCode != Activity.RESULT_OK ) {
+            return;
+        }
+        if( requestCode == RENAME_RECORDED_AUDIO_FILE_REQUEST_CODE ) {
+            restoreInitialState();
+            postAudioSavedEvent();
+        }
     }
 
     @Override

@@ -37,6 +37,10 @@
         <item name="android:src">@drawable/baseline_save_black_18</item>
     </style>
 
+    <style name="rename_file" parent="image_button_small_bg">
+        <item name="android:src">@drawable/baseline_edit_black_18</item>
+    </style>
+
     <style name="rename" parent="image_button_small_bg">
         <item name="android:src">@drawable/baseline_send_black_24</item>
         <item name="android:visibility">visible</item>
