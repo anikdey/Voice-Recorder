@@ -1,16 +1,13 @@
 package com.javarank.voice_recorder.recorder.ui.fragment;
 
-import android.content.Context;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +16,6 @@ import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.common.BaseSupportFragment;
 import com.javarank.voice_recorder.recorder.util.Constants;
 import com.javarank.voice_recorder.recorder.util.StorageUtil;
-import com.javarank.voice_recorder.recorder.util.Utility;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,14 +23,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-
 public class RecordingFragment extends BaseSupportFragment {
-
     public static final String TAG = RecordingFragment.class.getSimpleName();
 
     @BindView(R.id.start_recording_image_button)
@@ -45,7 +38,8 @@ public class RecordingFragment extends BaseSupportFragment {
     ImageView stopRecordingImageButton;
     @BindView(R.id.save_audio_image_button)
     ImageView saveAudioImageButton;
-
+    @BindView(R.id.timer_text_view)
+    TextView timerTextView;
 
     private Timer timer;
     private MediaRecorder mediaRecorder;
@@ -62,11 +56,6 @@ public class RecordingFragment extends BaseSupportFragment {
     public View getRootView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_recording, container, false);
     }
-
-
-
-    @BindView(R.id.my_text_view)
-    TextView myTextView;
 
     @Override
     public void init() {
@@ -129,7 +118,6 @@ public class RecordingFragment extends BaseSupportFragment {
     }
 
     protected void resumeRecording() {
-        //Todo
         // To be implemented in version 2.0
     }
 
@@ -173,22 +161,27 @@ public class RecordingFragment extends BaseSupportFragment {
 
     @OnClick(R.id.save_audio_image_button)
     protected void onSaveAudioImageButtonClick() {
+        //Todo post event
         restoreInitialState();
-        //deleteFile("save and restore initial state");
     }
 
     @OnClick(R.id.delete_audio_image_button)
     protected void onDeleteAudioImageButtonClick() {
-        deleteFile("delete and restore initial state");
+        deleteFile();
         restoreInitialState();
     }
 
-    private void deleteFile(String filePath) {
-        Toast.makeText(getContext(), filePath, Toast.LENGTH_SHORT).show();
+    private void deleteFile() {
+        boolean isDeleted = StorageUtil.deleteFile(fileName);
+        if( isDeleted ) {
+            fileName = null;
+            Toast.makeText(getContext(), R.string.deleted, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void restoreInitialState() {
         resetTimer();
+        setDurationTextOnTestView(timerTextView, 0);
         controlStopRecordingButtonVisibility(View.GONE);
         controlDeleteAndSaveButtonVisibility(View.GONE);
         controlRecordingButtonVisibility(View.VISIBLE);
@@ -204,8 +197,7 @@ public class RecordingFragment extends BaseSupportFragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //myTextView.setText(""+passedSeconds);
-                        setDurationTextOnTestView(myTextView, passedSeconds);
+                        setDurationTextOnTestView(timerTextView, passedSeconds);
                     }
                 });
             }
@@ -214,31 +206,29 @@ public class RecordingFragment extends BaseSupportFragment {
     }
 
     private void setDurationTextOnTestView(TextView textView, int length) {
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(length);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(length) - TimeUnit.MINUTES.toSeconds(minutes);
-        textView.setText(String.format("%02d:%02d", minutes, seconds));
+        int min = length / 60;
+        int sec = length % 60;
+        textView.setText(String.format("%02d:%02d", min, sec));
     }
 
     private void stopTimer() {
         passedSeconds = 0;
-        myTextView.setText("00:00");
         timer.cancel();
     }
 
     private void resetTimer() {
-
+        // To be implemented in version 2.0
     }
 
     private void pauseTimer() {
-
+        // To be implemented in version 2.0
     }
 
     private void resumeTimer() {
-
+        // To be implemented in version 2.0
     }
 
     private String getGeneratedFilePath() {
-        //String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + Constants.STORAGE_FOLDER_NAME;
         String storageDirectory = StorageUtil.getStorageDirectory();
         File file = createFile(storageDirectory, System.currentTimeMillis() + Constants.FILE_TYPE_MP4);
         fileName = file.getAbsolutePath();
