@@ -15,20 +15,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.common.BaseSupportFragment;
+import com.javarank.voice_recorder.recorder.events.AudioAddedEvent;
 import com.javarank.voice_recorder.recorder.listener.OnItemClickListener;
 import com.javarank.voice_recorder.recorder.models.RecordedItem;
 import com.javarank.voice_recorder.recorder.ui.adapter.SavedRecordingAdapter;
 import com.javarank.voice_recorder.recorder.util.Constants;
 import com.javarank.voice_recorder.recorder.util.StorageUtil;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import butterknife.BindView;
 
@@ -37,6 +42,8 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
     private static final int RENAME_SAVED_AUDIO_FILE_REQUEST_CODE = 300;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.nothing_found_linear_layout)
+    LinearLayout nothingFoundLinearLayout;
 
     private SavedRecordingAdapter adapter;
     private ArrayList<RecordedItem> recordings;
@@ -53,10 +60,11 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
 
     @Override
     public void init() {
+        EventBus.getDefault().register(this);
+
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                //String filePath = adapter.getItem(position).getFilePath();
                 MediaPlayerDialogFragment fragment = MediaPlayerDialogFragment.getInstance(position, recordings);
                 fragment.setCancelable(false);
                 fragment.show(getFragmentManager(), MediaPlayerDialogFragment.TAG);
@@ -88,8 +96,8 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
         } else {
             builder = new AlertDialog.Builder(getContext());
         }
-        builder.setTitle("Delete audio")
-                .setMessage("Are you sure you want to delete this audio?")
+        builder.setTitle(R.string.delete_audio)
+                .setMessage(getContext().getString(R.string.are_you_sure))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         StorageUtil.deleteFile(filePath);
@@ -114,15 +122,25 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
     }
 
     private void loadRecordedAudios() {
-        adapter.clear();
         recordings = getRecordedItems();
-        adapter.addItems(recordings);
-        adapter.notifyDataSetChanged();
+        if( recordings != null && recordings.size()>0 ) {
+            controlVisibility(View.VISIBLE, View.GONE);
+            adapter.clear();
+            adapter.addItems(recordings);
+            adapter.notifyDataSetChanged();
+        } else {
+            controlVisibility(View.GONE, View.VISIBLE);
+        }
+    }
+
+    private void controlVisibility(int listVisibility, int noDataVisibility){
+        recyclerView.setVisibility(listVisibility);
+        nothingFoundLinearLayout.setVisibility(noDataVisibility);
     }
 
     private ArrayList<RecordedItem> getRecordedItems() {
         ArrayList<RecordedItem> songs = new ArrayList<>();
-        File targetDirector = new File(getStorageFolderPath());
+        File targetDirector = new File(StorageUtil.getStorageDirectory());
         File[] files = targetDirector.listFiles();
         if(files != null) {
             for (File file : files) {
@@ -131,7 +149,7 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
                 int lastIndexOfSlash = path.lastIndexOf("/");
                 int pathLength = path.length();
                 String extension = path.substring(lastIndexOfDot, pathLength);
-                if( extension.equalsIgnoreCase(".mp3") || extension.equalsIgnoreCase(".mp4") ) {
+                if( extension.equalsIgnoreCase(Constants.FILE_TYPE_MP3) || extension.equalsIgnoreCase(Constants.FILE_TYPE_MP4) ) {
                     String fileName = path.substring(lastIndexOfSlash+1, lastIndexOfDot);
                     RecordedItem recordedItem = new RecordedItem();
                     recordedItem.setSongName(fileName);
@@ -159,11 +177,6 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
         return length;
     }
 
-    private String getStorageFolderPath() {
-        String targetPath = StorageUtil.getAbsolutePath() + Constants.STORAGE_FOLDER_NAME;
-        return targetPath;
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -177,6 +190,12 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         mediaPlayer.start();
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void consumeNotification(AudioAddedEvent event) {
+        initRecyclerView();
+        loadRecordedAudios();
     }
 
     @Override

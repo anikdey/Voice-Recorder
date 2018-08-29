@@ -16,8 +16,11 @@ import android.widget.Toast;
 
 import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.common.BaseSupportFragment;
+import com.javarank.voice_recorder.recorder.events.AudioAddedEvent;
 import com.javarank.voice_recorder.recorder.util.Constants;
 import com.javarank.voice_recorder.recorder.util.StorageUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.IOException;
@@ -173,6 +176,7 @@ public class RecordingFragment extends BaseSupportFragment {
 
     private void postAudioSavedEvent(){
         //Todo post event
+        EventBus.getDefault().postSticky(new AudioAddedEvent());
     }
 
     @OnClick(R.id.rename_audio_image_button)

@@ -6,4 +6,6 @@
     <string name="file_already_exists">A file with name %s already exists.</string>
     <string name="enter_valid_name">Enter a valid name</string>
     <string name="deleted">Successfully deleted.</string>
+    <string name="delete_audio">Delete audio</string>
+    <string name="are_you_sure">Are you sure you want to delete this audio?</string>
 </resources>
