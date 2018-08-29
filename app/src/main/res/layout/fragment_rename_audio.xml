@@ -4,7 +4,7 @@
     android:minWidth="1000dp"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="@dimen/default_padding"
+    android:padding="@dimen/padding_16dp"
     android:gravity="center">
 
     <EditText

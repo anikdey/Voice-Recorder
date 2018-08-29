@@ -1,39 +1,30 @@
 package com.javarank.voice_recorder.recorder.ui.fragment;
 
 
-import android.app.Dialog;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.common.BaseDialogFragment;
 import com.javarank.voice_recorder.recorder.models.RecordedItem;
 import com.javarank.voice_recorder.recorder.util.Utility;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MediaPlayerDialogFragment extends BaseDialogFragment implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
@@ -143,7 +134,7 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
                     }
                     mHandler.removeCallbacks(mRunnable);
                     updateSeekBar();
-                    setDurationTextOnTestView(currentPositionTextView, mediaPlayer.getCurrentPosition());
+                    Utility.setDurationTextOnTextView(currentPositionTextView, mediaPlayer.getCurrentPosition());
                 } else if (mediaPlayer == null && fromUser) {
                     prepareMediaPlayerFromPoint(progress, recordings.get(currentPosition).getFilePath());
                     updateSeekBar();
@@ -187,8 +178,9 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
             mediaPlayer.seekTo(playbackPosition);
             mediaPlayer.start();
             setPlayPauseIcon(R.drawable.pause_white);
-            setDurationTextOnTestView(totalDurationTextView, length);
-            setDurationTextOnTestView(currentPositionTextView, mediaPlayer.getCurrentPosition());
+            Utility.setDurationTextOnTextView(totalDurationTextView, length);
+            Utility.setDurationTextOnTextView(currentPositionTextView, mediaPlayer.getCurrentPosition());
+
             seekBar.setMax(length);
             updateSeekBar();
             isPlaying = true;
@@ -219,7 +211,7 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
             int length = mediaPlayer.getDuration();
             seekBar.setMax(length);
             seekBar.setProgress(mediaPlayer.getCurrentPosition());
-            setDurationTextOnTestView(currentPositionTextView, mediaPlayer.getCurrentPosition());
+            Utility.setDurationTextOnTextView(currentPositionTextView, mediaPlayer.getCurrentPosition());
             mediaPlayer.start();
             mediaPlayer.setOnCompletionListener(this);
             setPlayPauseIcon(R.drawable.pause_white);
@@ -228,12 +220,6 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void setDurationTextOnTestView(TextView textView, int length) {
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(length);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(length) - TimeUnit.MINUTES.toSeconds(minutes);
-        textView.setText(String.format("%02d:%02d", minutes, seconds));
     }
 
     private void setPlayPauseIcon(int resId) {
@@ -249,7 +235,7 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
         playbackPosition = 0;
         seekBar.setProgress(0);
         setPlayPauseIcon(R.drawable.play);
-        setDurationTextOnTestView(currentPositionTextView, 0);
+        Utility.setDurationTextOnTextView(currentPositionTextView, 0);
     }
 
     private void killMediaPlayer() {
@@ -282,7 +268,7 @@ public class MediaPlayerDialogFragment extends BaseDialogFragment implements Med
             if (mediaPlayer != null) {
                 int mCurrentPosition = mediaPlayer.getCurrentPosition();
                 seekBar.setProgress(mCurrentPosition);
-                setDurationTextOnTestView(currentPositionTextView, mCurrentPosition);
+                Utility.setDurationTextOnTextView(currentPositionTextView, mCurrentPosition);
                 updateSeekBar();
             }
         }

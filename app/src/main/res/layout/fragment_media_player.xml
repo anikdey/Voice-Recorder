@@ -5,7 +5,7 @@
     android:background="@color/colorAccent"
     android:minWidth="1000dp"
     android:orientation="vertical"
-    android:padding="@dimen/default_padding">
+    android:padding="@dimen/padding_16dp">
 
     <LinearLayout
         android:id="@+id/file_name_container_linear_layout"

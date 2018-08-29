@@ -12,17 +12,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.common.BaseSupportFragment;
 import com.javarank.voice_recorder.recorder.util.Constants;
 import com.javarank.voice_recorder.recorder.util.StorageUtil;
+import com.javarank.voice_recorder.recorder.util.Utility;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -40,13 +45,13 @@ public class RecordingFragment extends BaseSupportFragment {
     ImageView stopRecordingImageButton;
     @BindView(R.id.save_audio_image_button)
     ImageView saveAudioImageButton;
-    @BindView(R.id.sceonds_recorded_chronometer)
-    Chronometer secondsRecordedChronometer;
 
-    private boolean isAlreadyStartedRecording = false;
-    private int secondsCounter = 0;
-    private String fileName = null;
+
+    private Timer timer;
     private MediaRecorder mediaRecorder;
+    private boolean isAlreadyStartedRecording = false;
+    private int passedSeconds = 0;
+    private String fileName = null;
 
     public static RecordingFragment getNewInstance() {
         RecordingFragment fragment = new RecordingFragment();
@@ -57,6 +62,11 @@ public class RecordingFragment extends BaseSupportFragment {
     public View getRootView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_recording, container, false);
     }
+
+
+
+    @BindView(R.id.my_text_view)
+    TextView myTextView;
 
     @Override
     public void init() {
@@ -186,11 +196,33 @@ public class RecordingFragment extends BaseSupportFragment {
     }
 
     private void startTimer() {
-        secondsRecordedChronometer.start();
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                passedSeconds++;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //myTextView.setText(""+passedSeconds);
+                        setDurationTextOnTestView(myTextView, passedSeconds);
+                    }
+                });
+            }
+        }, 0 ,1000);
+
+    }
+
+    private void setDurationTextOnTestView(TextView textView, int length) {
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(length);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(length) - TimeUnit.MINUTES.toSeconds(minutes);
+        textView.setText(String.format("%02d:%02d", minutes, seconds));
     }
 
     private void stopTimer() {
-        secondsRecordedChronometer.stop();
+        passedSeconds = 0;
+        myTextView.setText("00:00");
+        timer.cancel();
     }
 
     private void resetTimer() {
