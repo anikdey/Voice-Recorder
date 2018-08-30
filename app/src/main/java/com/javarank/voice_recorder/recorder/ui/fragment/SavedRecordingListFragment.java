@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.javarank.voice_recorder.R;
 import com.javarank.voice_recorder.common.BaseSupportFragment;
@@ -101,9 +102,11 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
                 .setMessage(getContext().getString(R.string.are_you_sure))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        StorageUtil.deleteFile(filePath);
-                        initRecyclerView();
-                        loadRecordedAudios();
+                        boolean isDeleted = StorageUtil.deleteFile(filePath);
+                        if( isDeleted ) {
+                            Toast.makeText(getContext(), R.string.deleted, Toast.LENGTH_SHORT).show();
+                            loadRecordedAudios();
+                        }
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -194,7 +197,6 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void consumeNotification(AudioAddedEvent event) {
-        initRecyclerView();
         loadRecordedAudios();
     }
 
@@ -204,7 +206,6 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
             return;
         }
         if( requestCode == RENAME_SAVED_AUDIO_FILE_REQUEST_CODE ) {
-            initRecyclerView();
             loadRecordedAudios();
         }
     }

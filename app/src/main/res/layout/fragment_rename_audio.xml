@@ -9,12 +9,8 @@
 
     <EditText
         android:id="@+id/custom_name_edit_text"
-        style="@style/custom_name_edit_text_style"
-        android:ellipsize="end"
-        android:hint="Enter name"
-        />
+        style="@style/custom_name_edit_text_style" />
     <ImageButton
         android:id="@+id/rename_image_button"
-        style="@style/rename"
-        />
+        style="@style/rename" />
 </LinearLayout>

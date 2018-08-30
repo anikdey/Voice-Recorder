@@ -233,6 +233,20 @@ public class RecordingFragment extends BaseSupportFragment {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        if( mediaRecorder != null ) {
+            mediaRecorder.stop();
+            mediaRecorder.release();
+            mediaRecorder = null;
+            filePath = null;
+        }
+        if(timer!=null) {
+            timer.cancel();
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if( resultCode != Activity.RESULT_OK ) {
             return;

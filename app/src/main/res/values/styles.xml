@@ -42,7 +42,7 @@
     </style>
 
     <style name="rename" parent="image_button_small_bg">
-        <item name="android:src">@drawable/baseline_send_black_24</item>
+        <item name="android:src">@drawable/baseline_done_black_24</item>
         <item name="android:visibility">visible</item>
     </style>
 
@@ -92,7 +92,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_below">@+id/seek_bar</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/text_size_16sp</item>
     </style>
 
@@ -102,14 +102,14 @@
         <item name="android:layout_marginTop">@dimen/margin_8dp</item>
         <item name="android:layout_marginBottom">@dimen/margin_8dp</item>
         <item name="android:layout_below">@+id/file_name_container_linear_layout</item>
-        <item name="android:thumbTint">@color/white</item>
+        <item name="android:thumbTint">@color/colorAccent</item>
         <!--<item name="android:progressDrawable">@drawable/seek_bar_progress</item>-->
     </style>
 
     <style name="audio_player_button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:tint">@color/white</item>
+        <item name="android:tint">@color/colorAccent</item>
     </style>
 
     <style name="cancel_playing_audio" parent="audio_player_button">
@@ -131,7 +131,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">@dimen/margin_16dp</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/text_size_16sp</item>
     </style>
 

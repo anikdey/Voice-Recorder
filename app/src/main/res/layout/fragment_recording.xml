@@ -35,7 +35,7 @@
         <ImageButton
             android:id="@+id/stop_recording_image_button"
             style="@style/pause" />
-        
+
         <ImageButton
             android:id="@+id/save_audio_image_button"
             style="@style/save"
