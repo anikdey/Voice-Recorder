@@ -66,8 +66,9 @@ public class RenameAudioDialogFragment extends BaseDialogFragment {
         } else {
             int result = StorageUtil.renameFile(filePath, getNewFilePath());
             if( result == Constants.FILE_ALREADY_EXISTS ) {
-                String message = String.format(getContext().getString(R.string.file_already_exists), getName());
-                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                notifySuccess();
+                /*String message = String.format(getContext().getString(R.string.file_already_exists), getName());
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();*/
             } else if( result == Constants.FILE_RENAMED ) {
                 Toast.makeText(getContext(), getContext().getString(R.string.file_success_fully_renamed), Toast.LENGTH_SHORT).show();
                 notifySuccess();

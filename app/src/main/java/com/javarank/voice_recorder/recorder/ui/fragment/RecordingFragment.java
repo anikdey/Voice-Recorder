@@ -44,8 +44,6 @@ public class RecordingFragment extends BaseSupportFragment {
     ImageView stopRecordingImageButton;
     @BindView(R.id.save_audio_image_button)
     ImageView saveAudioImageButton;
-    @BindView(R.id.rename_audio_image_button)
-    ImageView renameAudioImageButton;
     @BindView(R.id.timer_text_view)
     TextView timerTextView;
 
@@ -139,18 +137,10 @@ public class RecordingFragment extends BaseSupportFragment {
     protected void controlDeleteAndSaveButtonVisibility(int visibility) {
         deleteAudioImageButton.setVisibility(visibility);
         saveAudioImageButton.setVisibility(visibility);
-        renameAudioImageButton.setVisibility(visibility);
     }
 
     @OnClick(R.id.save_audio_image_button)
     protected void onSaveAudioImageButtonClick() {
-        postAudioSavedEvent();
-        restoreInitialState();
-        showMessage(getContext().getString(R.string.saved));
-    }
-
-    @OnClick(R.id.rename_audio_image_button)
-    protected void renameAudioFile() {
         String fileName = StorageUtil.getFileName(filePath);
         RenameAudioDialogFragment fragment = RenameAudioDialogFragment.getInstance(filePath, fileName);
         fragment.setCancelable(true);
@@ -250,6 +240,7 @@ public class RecordingFragment extends BaseSupportFragment {
         if( requestCode == RENAME_RECORDED_AUDIO_FILE_REQUEST_CODE ) {
             restoreInitialState();
             postAudioSavedEvent();
+            showMessage(getContext().getString(R.string.saved));
         }
     }
 
