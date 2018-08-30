@@ -22,16 +22,19 @@ import butterknife.OnClick;
 public class RenameAudioDialogFragment extends BaseDialogFragment {
     public static final String TAG = RenameAudioDialogFragment.class.getSimpleName();
     private static final String ARG_FILE_PATH = "path";
+    private static final String ARG_FILE_CURRENT_NAME = "file_current_name";
 
     @BindView(R.id.custom_name_edit_text)
     EditText customNameEditText;
 
     private String filePath;
+    private String fileCurrentName;
 
-    public static RenameAudioDialogFragment getInstance(String path) {
+    public static RenameAudioDialogFragment getInstance(String path, String fileCurrentName) {
         RenameAudioDialogFragment fragment = new RenameAudioDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_FILE_PATH, path);
+        args.putString(ARG_FILE_CURRENT_NAME, fileCurrentName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -41,6 +44,7 @@ public class RenameAudioDialogFragment extends BaseDialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             filePath = getArguments().getString(ARG_FILE_PATH);
+            fileCurrentName = getArguments().getString(ARG_FILE_CURRENT_NAME);
         }
     }
 
@@ -51,7 +55,8 @@ public class RenameAudioDialogFragment extends BaseDialogFragment {
 
     @Override
     public void init() {
-
+        customNameEditText.setText(fileCurrentName);
+        customNameEditText.setSelection(fileCurrentName.length());
     }
 
     @OnClick(R.id.rename_image_button)

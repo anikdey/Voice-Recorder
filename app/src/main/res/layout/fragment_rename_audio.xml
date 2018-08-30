@@ -10,6 +10,7 @@
     <EditText
         android:id="@+id/custom_name_edit_text"
         style="@style/custom_name_edit_text_style"
+        android:ellipsize="end"
         android:hint="Enter name"
         />
     <ImageButton

@@ -47,4 +47,11 @@ public class StorageUtil {
         }
         return  result;
     }
+
+    public static String getFileName(String filePath) {
+        int lastIndexOfDot = filePath.lastIndexOf(".");
+        int lastIndexOfSlash = filePath.lastIndexOf("/");
+        String fileName = filePath.substring(lastIndexOfSlash+1, lastIndexOfDot);
+        return fileName;
+    }
 }

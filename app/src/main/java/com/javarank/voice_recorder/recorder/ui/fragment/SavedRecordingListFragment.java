@@ -79,7 +79,8 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
             @Override
             public void showRenameDialogFragment(int position) {
                 String filePath = adapter.getItem(position).getFilePath();
-                RenameAudioDialogFragment fragment = RenameAudioDialogFragment.getInstance(filePath);
+                String fileCurrentName = adapter.getItem(position).getSongName();
+                RenameAudioDialogFragment fragment = RenameAudioDialogFragment.getInstance(filePath, fileCurrentName);
                 fragment.setCancelable(true);
                 fragment.setTargetFragment(SavedRecordingListFragment.this, RENAME_SAVED_AUDIO_FILE_REQUEST_CODE);
                 fragment.show(getFragmentManager(), RenameAudioDialogFragment.TAG);
@@ -146,11 +147,10 @@ public class SavedRecordingListFragment extends BaseSupportFragment implements M
             for (File file : files) {
                 String path = file.getAbsolutePath();
                 int lastIndexOfDot = path.lastIndexOf(".");
-                int lastIndexOfSlash = path.lastIndexOf("/");
                 int pathLength = path.length();
                 String extension = path.substring(lastIndexOfDot, pathLength);
                 if( extension.equalsIgnoreCase(Constants.FILE_TYPE_MP3) || extension.equalsIgnoreCase(Constants.FILE_TYPE_MP4) ) {
-                    String fileName = path.substring(lastIndexOfSlash+1, lastIndexOfDot);
+                    String fileName = StorageUtil.getFileName(path);
                     RecordedItem recordedItem = new RecordedItem();
                     recordedItem.setSongName(fileName);
                     recordedItem.setFilePath(path);

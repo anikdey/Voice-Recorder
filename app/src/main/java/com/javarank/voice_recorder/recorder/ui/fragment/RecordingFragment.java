@@ -53,7 +53,7 @@ public class RecordingFragment extends BaseSupportFragment {
     private MediaRecorder mediaRecorder;
     private boolean isAlreadyStartedRecording = false;
     private int passedSeconds = 0;
-    private String fileName = null;
+    private String filePath = null;
 
     public static RecordingFragment getNewInstance() {
         RecordingFragment fragment = new RecordingFragment();
@@ -151,7 +151,8 @@ public class RecordingFragment extends BaseSupportFragment {
 
     @OnClick(R.id.rename_audio_image_button)
     protected void renameAudioFile() {
-        RenameAudioDialogFragment fragment = RenameAudioDialogFragment.getInstance(fileName);
+        String fileName = StorageUtil.getFileName(filePath);
+        RenameAudioDialogFragment fragment = RenameAudioDialogFragment.getInstance(filePath, fileName);
         fragment.setCancelable(true);
         fragment.setTargetFragment(RecordingFragment.this, RENAME_RECORDED_AUDIO_FILE_REQUEST_CODE);
         fragment.show(getFragmentManager(), RenameAudioDialogFragment.TAG);
@@ -163,7 +164,7 @@ public class RecordingFragment extends BaseSupportFragment {
     }
 
     private void deleteFile() {
-        boolean isDeleted = StorageUtil.deleteFile(fileName);
+        boolean isDeleted = StorageUtil.deleteFile(filePath);
         if( isDeleted ) {
             restoreInitialState();
             showMessage(getContext().getString(R.string.deleted));
@@ -204,7 +205,7 @@ public class RecordingFragment extends BaseSupportFragment {
 
     private void restoreInitialState() {
         resetTimer();
-        fileName = null;
+        filePath = null;
         isAlreadyStartedRecording = false;
         setDurationTextOnTestView(timerTextView, 0);
         controlStopRecordingButtonVisibility(View.GONE);
@@ -237,8 +238,8 @@ public class RecordingFragment extends BaseSupportFragment {
     private String getGeneratedFilePath() {
         String storageDirectory = StorageUtil.getStorageDirectory();
         File file = createFile(storageDirectory, System.currentTimeMillis() + Constants.FILE_TYPE_MP4);
-        fileName = file.getAbsolutePath();
-        return fileName;
+        filePath = file.getAbsolutePath();
+        return filePath;
     }
 
     @Override
